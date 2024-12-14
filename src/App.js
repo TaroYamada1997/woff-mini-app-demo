@@ -9,7 +9,6 @@ const WorksmobileSDK = () => {
     amount: '',
     reason: '',
   });
-
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -36,22 +35,17 @@ const WorksmobileSDK = () => {
     };
     document.body.appendChild(script);
 
-    // クリーンアップ: コンポーネントがアンマウントされた時にスクリプトを削除
     return () => {
       document.body.removeChild(script);
     };
   }, []);
 
   const getProfile = () => {
-    // Get profile
     window.woff.getProfile().then((profile) => {
-        // Success
-        console.log(profile)
-        setUserName(profile.displayName);
+      setUserName(profile.displayName);
     }).catch((err) => {
-        // Error
-        console.log(err)
-        window.alert(err);
+      console.log(err);
+      window.alert(err);
     });
   }
 
@@ -63,8 +57,10 @@ const WorksmobileSDK = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const { applicant, department, amount, reason } = formData;
+
+    // 稟議書メッセージ
     const message = `
       稟議書提出
       申請者: ${applicant}
@@ -74,6 +70,7 @@ const WorksmobileSDK = () => {
     `;
 
     if (isLoaded) {
+      // WOFF SDKを通じてメッセージ送信
       window.woff.sendMessage({ content: message })
         .then(() => {
           console.log('稟議書が送信されました');
